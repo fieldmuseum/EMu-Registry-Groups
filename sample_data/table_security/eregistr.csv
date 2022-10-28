@@ -1,0 +1,11 @@
+eregistry_key,irn,Key1,Key2,Key3,Key4,Key5,Key6,Key7,Key8,Key9,Key10,Value,AdmDateInserted,AdmDateModified
+5,11826,Group,TestUser,Table,etable,Security,Delete,,,,,SecDepartment_tab=Action; SecDepartment_tab=RRC,2017-02-11,2017-02-11
+6,11827,Group,TestUser,Table,etable,Security,Display,,,,,SecDepartment_tab=Action;SecDepartment_tab=RRC;SecDepartment_tab=Botany;SecDepartment_tab=Zoology;SecDepartment_tab=Anthropology;SecDepartment_tab=Geology;SecDepartment_tab=Library;SecDepartment_tab=Communications;SecDepartment_tab=Exhibitions,2017-02-11,2021-02-23
+7,11828,Group,TestUser,Table,etable,Security,Edit,,,,,SecDepartment_tab=Action; SecDepartment_tab=RRC,2017-02-11,2017-02-11
+8,11829,Group,TestUser,Table,etable,Security,Insert,,,,,SecDepartment_tab=Action; SecDepartment_tab=RRC,2017-02-11,2017-02-11
+73,12852,Group,AltUser,Table,etable,Security,Delete,,,,,SecDepartment_tab=Botany,2017-02-11,2017-02-11
+74,12853,Group,AltUser,Table,etable,Security,Display,,,,,SecDepartment_tab=Botany;SecDepartment_tab=Anthropology;SecDepartment_tab=Exhibitions;SecDepartment_tab=Geology;SecDepartment_tab=Zoology;SecDepartment_tab=Photo Archives;SecDepartment_tab=Action;SecDepartment_tab=Communications,2017-02-11,2021-03-03
+75,12854,Group,AltUser,Table,etable,Security,Edit,,,,,SecDepartment_tab=Botany,2017-02-11,2017-02-11
+76,12855,Group,AltUser,Table,etable,Security,Insert,,,,,SecDepartment_tab=Botany,2017-02-11,2017-02-11
+77,2174012,Group,GlobalRead,Table,etable,Security,Display,,,,,AdmPublishWebPassword=Yes;SecRecordStatus=Active,2020-06-25,2021-04-07
+78,2174014,Group,GlobalRead,Table,etable,Security,Insert,,,,,AdmPublishWebPassword=Yes;SecRecordStatus=Active;SecDepartment_tab=Action;SecDepartment_tab=Anthropology;SecDepartment_tab=Botany;SecDepartment_tab=Geology;SecDepartment_tab=Zoology;SecDepartment_tab=Photo Archives;SecDepartment_tab=Exhibitions;SecDepartment_tab=Communications,2020-06-25,2021-04-07
