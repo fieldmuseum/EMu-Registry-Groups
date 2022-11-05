@@ -76,15 +76,18 @@ mm_sec3 <- pivot_longer(mm_sec2, cols = Dept_1:colnames(mm_sec2)[NCOL(mm_sec2)],
                         names_to = "Perm_order",
                         values_to = "Perm", values_drop_na = TRUE)
 
+# filter down to Permission based on SecDept values only
+mm_not_sec <-mm_sec3[grepl("^SecDep", mm_sec3$Perm) < 1,]
+  
+mm_sec3 <- mm_sec3[grepl("^SecDep", mm_sec3$Perm) > 0,]
+mm_sec3$Perm <- gsub("SecDept_", "", mm_sec3$Perm)
+
 # spread display/edit/delete permission
 mm_sec3 <- mm_sec3[order(mm_sec3$Key4, mm_sec3$Key2, mm_sec3$Key6),  # ]
                    !colnames(mm_sec3) %in% c("Perm_order")]
-
 mm_sec3 <- mm_sec3[order(mm_sec3$Key4, mm_sec3$Key2, mm_sec3$Perm),]
-
 mm_sec4 <- pivot_wider(unique(mm_sec3), id_cols = c(Key4,Key2,Perm),
                        names_from = Key6, values_from = Key6)
-
 mm_sec4$Permission <- NA
 mm_sec4$Permission[is.na(mm_sec4$Display)==F] <- 1
 mm_sec4$Permission[is.na(mm_sec4$Edit)==F] <- 2
@@ -93,22 +96,53 @@ mm_sec4$Permission[is.na(mm_sec4$Delete)==F] <- 3
 drop_cols2 <- c("Display", "Edit", "Delete")
 
 mm_sec4 <- mm_sec4[nchar(mm_sec4$Perm) > 0,]
-
 mm_sec5 <- pivot_wider(mm_sec4[,!colnames(mm_sec4) %in% drop_cols2], id_cols=Key4:Key2,
                        names_from=Perm, values_from=Permission)
-
 mm_sec5[is.na(mm_sec5)] <- 0
 mm_sec5 <- unite(mm_sec5, col = "table_group", Key4:Key2)
-
 colnames(mm_sec5) <- colnames(mm_sec5) %>%
   gsub("^\\s+|\\s+$", "", .) # %>%
 #   gsub("(\\s|\\=|\\$|\\-)+", "_", .)
-
 mm_sec5 <- as.data.frame(mm_sec5)
 rownames(mm_sec5) <- mm_sec5$table_group
-
 mm_sec6 <- as.matrix(mm_sec5[,2:NCOL(mm_sec5)])
 mm_sec6 <- mm_sec6[,order(colnames(mm_sec6))]
+
+
+# Prep not-sec / other permissions
+# spread display/edit/delete permission
+mm_not_sec3 <- mm_not_sec[order(mm_not_sec$Key4, mm_not_sec$Key2, mm_not_sec$Key6),  # ]
+                   !colnames(mm_not_sec) %in% c("Perm_order")]
+
+mm_not_sec3 <- mm_not_sec3[order(mm_not_sec3$Key4, mm_not_sec3$Key2, mm_not_sec3$Perm),]
+
+mm_not_sec4 <- pivot_wider(unique(mm_not_sec3), id_cols = c(Key4,Key2,Perm),
+                       names_from = Key6, values_from = Key6)
+
+mm_not_sec4$Permission <- NA
+mm_not_sec4$Permission[is.na(mm_not_sec4$Display)==F] <- 1
+mm_not_sec4$Permission[is.na(mm_not_sec4$Edit)==F] <- 2
+mm_not_sec4$Permission[is.na(mm_not_sec4$Delete)==F] <- 3
+
+drop_cols2 <- c("Display", "Edit", "Delete")
+
+mm_not_sec4 <- mm_not_sec4[nchar(mm_not_sec4$Perm) > 0,]
+
+mm_not_sec5 <- pivot_wider(mm_not_sec4[,!colnames(mm_not_sec4) %in% drop_cols2], id_cols=Key4:Key2,
+                       names_from=Perm, values_from=Permission)
+
+mm_not_sec5[is.na(mm_not_sec5)] <- 0
+mm_not_sec5 <- unite(mm_not_sec5, col = "table_group", Key4:Key2)
+
+colnames(mm_not_sec5) <- colnames(mm_not_sec5) %>%
+  gsub("^\\s+|\\s+$", "", .) # %>%
+#   gsub("(\\s|\\=|\\$|\\-)+", "_", .)
+
+mm_not_sec5 <- as.data.frame(mm_not_sec5)
+rownames(mm_not_sec5) <- mm_not_sec5$table_group
+
+mm_not_sec6 <- as.matrix(mm_not_sec5[,2:NCOL(mm_not_sec5)])
+mm_not_sec6 <- mm_not_sec6[,order(colnames(mm_not_sec6))]
 
 
 # Define UI
@@ -140,10 +174,10 @@ ui <- fluidPage(
       h5("In the main chart:"),
       tags$p("- ", tags$strong("Each column"), " = an institution's EMu schema"),
       tags$p("- ", tags$strong("Each row"), " = a column-name (field) in the EMu schema"),
-      tags$p("- ", tags$strong("0"), " (white) = no setting"),
-      tags$p("- ", tags$strong("1"), " (pale blue) = View-permission"),
-      tags$p("- ", tags$strong("2"), " (mid blue) = Edit-permission"),
-      tags$p("- ", tags$strong("3"), " (dark blue) = Delete-permission"),
+      tags$p("- ", tags$strong("0"), " (gray) = no setting"),
+      tags$p("- ", tags$strong("1"), " (green) = View-permission"),
+      tags$p("- ", tags$strong("2"), " (blue) = Edit-permission"),
+      tags$p("- ", tags$strong("3"), " (pink) = Delete-permission"),
       tags$br(),
 
       width = 3
@@ -157,10 +191,10 @@ ui <- fluidPage(
       plotlyOutput("heatPlot", height = "800px"),
       tags$br(),
       # tags$br(),
-      # # 
-      # # h4("Alternate view:"),
-      # # tags$p(tags$em("- 'Missing' here simply means a field is not in a schema -- not necessarily a bad thing.")),
-      # # plotOutput("visdatChosenMiss"),
+
+      h4("Other permission settings:"),
+      # tags$p(tags$em("- 'Missing' here simply means a field is not in a schema -- not necessarily a bad thing.")),
+      plotlyOutput("heatPlot2", height = "600px"),
       # 
       # plotOutput("testPlot"),
       # tags$br,
@@ -195,7 +229,7 @@ server <- function(input, output) {
               labRow = gsub(paste0(input$ModuleChosen, "_"), "",
                             rownames(mm_sec6)[grepl(input$ModuleChosen, rownames(mm_sec6)) > 0]),
               # labCol = colnames(mm_sec5)[2:NCOL(mm_sec5)],
-              colors = brewer.pal (3, "Blues" ), # heat.colors(3),
+              colors = c("#f7f7f7", "#9fc456", "#569fc4", "#c4569f"), # "#c47b56"), #), # brewer.pal(3, "RdGy"), # viridis(10, option="rocket"), #  # heat.colors(3),
               k_row = 1, k_col = 1,
               dendrogram = c("none"),
               show_dendrogram = c(FALSE, FALSE),
@@ -204,37 +238,41 @@ server <- function(input, output) {
               show_grid = FALSE,
               plot_method = "plotly",
               # scale = "column",
+              xlab = "Security Department", 
+              ylab = "EMu User Group",
               colorbar_yanchor = "top")
 
   })
 
-#   output$testPlot <- renderPlot({
-# 
-# 
-#     # ggplotly(
-#       ggplot(mm_sec4[mm_sec4$Key4==input$ModuleChosen,],  # as.data.frame(mm_sec6[grepl("Default", rownames(mm_sec6)) > 0,]),
-#              aes(x = Perm, # colnames(mm_sec6[grepl("Default", rownames(mm_sec6)) > 0,]),
-#                  y = Key2, # rownames(mm_sec6[grepl("Default", rownames(mm_sec6)) > 0,]),
-#                  fill = Permission)) + # mm_sec6[grepl("Default", rownames(mm_sec6)) > 0,])) +
-#       geom_tile()
-# 
-#   })
-#   
-  # output$visdatCat <- renderPlot({
-  #   vis_dat(catFields[catFields$Table=="ecatalogue",])
-  # })
-  # 
+  output$heatPlot2 <- renderPlotly({
+    # vis_dat(catFields)
+    
+    heatmaply(mm_not_sec6[grepl(input$ModuleChosen, rownames(mm_not_sec6)) > 0,],
+              # as.matrix(mm_sec5[grepl(input$ModuleChosen, rownames(mm_sec5)) > 0,
+              #                   2:NCOL(mm_sec5)]),
+              labRow = gsub(paste0(input$ModuleChosen, "_"), "",
+                            rownames(mm_not_sec6)[grepl(input$ModuleChosen, rownames(mm_not_sec6)) > 0]),
+              # labCol = colnames(mm_sec5)[2:NCOL(mm_sec5)],
+              colors = c("#f7f7f7", "#9fc456", "#569fc4", "#c4569f"), # "#c47b56"), #), # brewer.pal(3, "RdGy"), # viridis(10, option="rocket"), #  # heat.colors(3),
+              k_row = 1, k_col = 1,
+              dendrogram = c("none"),
+              show_dendrogram = c(FALSE, FALSE),
+              # width = ,
+              # height = 500,
+              show_grid = FALSE,
+              plot_method = "plotly",
+              # scale = "column",
+              xlab = "Permission Setting", 
+              ylab = "EMu User Group",
+              colorbar_yanchor = "top")
+    
+  })
+
   # output$visdatPar <- renderPlot({
   #   vis_dat(catFields[catFields$Table=="eparties",])
   # })
-
   # output$visdatChosen <- renderPlot({
   #   vis_dat(catFields[catFields$Table==input$ModuleChosen,])
-  # })
-  # 
-  # output$visdatChosenMiss <- renderPlot({
-  #   vis_miss(catFields[catFields$Table==input$ModuleChosen,],
-  #            sort_miss = TRUE)
   # })
 
   output$modulePick <- renderText({
