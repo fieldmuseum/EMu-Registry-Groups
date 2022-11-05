@@ -21,9 +21,13 @@ http://10.10.10.247:3838/EMuRegistryGroups
 1. In your copy of this repo, check and add if needed:
     - a subdirectory named: `real_data_in/table_security/`
     - a text file named `.Renviron`, following the [`.Renviron.example`](https://github.com/magpiedin/EMu-Registry-Groups/blob/master/.Renviron.example) file. Adjust values if needed.
-2. In the EMu Registry module, make a CSV report, include Keys1-10 and Value columns. Report out all records. 
-3. Copy the report output `eregistr.csv` file to `real_data_in/table_security/` in this repo.
-4. Re-run `app.R`.  (For general shiny app help, see https://shiny.rstudio.com/articles/running.html)
+2. In EMu, open the Registry module, and make a CSV report that includes Keys1-10 and the Value columns. 
+3. Report out all records. 
+4. Copy the report output `eregistr.csv` file to `real_data_in/table_security/` in this repo.
+5. Re-run `app.R` -- e.g. by entering this at the R console: `shiny::runApp()`
+
+
+For general shiny app help, see https://shiny.rstudio.com/articles/running.html
 
 
 
