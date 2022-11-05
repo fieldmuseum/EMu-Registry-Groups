@@ -1,0 +1,7 @@
+heatmaply
+plotly
+RColorVrewer
+readr
+shiny
+stringr
+tidyr
