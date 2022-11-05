@@ -1,0 +1,7 @@
+LIVE_OR_TEST="TEST"
+
+LIVE_REGISTRY_IN="real_data_in/"
+LIVE_REGISTRY_OUT="real_data_out/"
+
+TEST_REGISTRY_IN="sample_data_in/"
+TEST_REGISTRY_OUT="sample_data_out/"
