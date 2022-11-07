@@ -170,11 +170,13 @@ ui <- fluidPage(
     mainPanel(
       
       h3("Group permissions", textOutput("modulePick")),
+      tags$p("(If no chart displays, no group permissions are set.)"),
       plotlyOutput("heatPlot", height = "800px"),
       
       tags$br(),
 
       h4("Other permission settings:"),
+      tags$p("(If no chart displays, no other permissions are set.)"),
       plotlyOutput("heatPlot2", height = "600px"),
       
       width = 8,
@@ -196,6 +198,8 @@ server <- function(input, output) {
   # )
 # 
   output$heatPlot <- renderPlotly({
+    
+    req(NROW(mm_sec6[grepl(input$ModuleChosen, rownames(mm_sec6)) > 0,]) > 0)
 
     heatmaply(mm_sec6[grepl(input$ModuleChosen, rownames(mm_sec6)) > 0,],
               labRow = gsub(paste0(input$ModuleChosen, "_"), "",
@@ -214,6 +218,8 @@ server <- function(input, output) {
   })
 
   output$heatPlot2 <- renderPlotly({
+    
+    req(NROW(mm_not_sec6[grepl(input$ModuleChosen, rownames(mm_not_sec6)) > 0,]) > 0)
     
     heatmaply(mm_not_sec6[grepl(input$ModuleChosen, rownames(mm_not_sec6)) > 0,],
               labRow = gsub(paste0(input$ModuleChosen, "_"), "",
