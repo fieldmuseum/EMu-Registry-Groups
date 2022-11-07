@@ -208,6 +208,7 @@ server <- function(input, output) {
               plot_method = "plotly",
               xlab = "Security Department", 
               ylab = "EMu User Group",
+              limits = c(0,3),
               colorbar_yanchor = "top")
 
   })
@@ -225,6 +226,7 @@ server <- function(input, output) {
               plot_method = "plotly",
               xlab = "Permission Setting", 
               ylab = "EMu User Group",
+              limits = c(0,3),
               colorbar_yanchor = "top")
     
   })
