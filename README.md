@@ -1,9 +1,6 @@
 # EMu-Registry-Groups
 Heatmaps & Summaries of eregistry permission settings for EMu User Groups
 
-## In-house demo-setup:
-http://10.10.10.247:3838/EMuRegistryGroups 
-
 ## How to setup and run this locally
 1. Clone the repo.
 2. In the repo, add a text file named `.Renviron`, following the [`.Renviron.example`](https://github.com/magpiedin/EMu-Registry-Groups/blob/master/.Renviron.example) file. Adjust values for variables if needed.
@@ -30,4 +27,6 @@ http://10.10.10.247:3838/EMuRegistryGroups
 For general shiny app help, see https://shiny.rstudio.com/articles/running.html
 
 
+## In-house demo-setup:
+http://10.10.10.247:3838/EMuRegistryGroups 
 
