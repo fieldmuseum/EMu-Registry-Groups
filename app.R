@@ -13,8 +13,10 @@ library(plotly)
 
 
 # # Input Registry CSV
-# # This should be an EMu eregistry report of Key1 through Key10 and the Value columns
-# urlfile="https://raw.githubusercontent.com/fieldmuseum/EMu-Documentation/master/Schemas/all_schemas.csv"
+# # This should be an EMu eregistry report of 
+# #   Key1 through Key10 and the Value columns
+# #   for all records where Key5 == 'Security' and Key1 == 'Group'
+# urlfile="https://raw.githubusercontent.com/fieldmuseum/EMu-Registry-Groups/master/sample_data_in/table_security/eregistr.csv"
 # catFields <- read_csv(url(urlfile))
 
 # input_filepath <- "../sample_data/table_security/"
@@ -27,6 +29,7 @@ if (Sys.getenv("LIVE_OR_TEST")=="LIVE") {
 mm_sec_bu <- read_csv(file=paste0(input_filepath,"eregistr.csv"))  # read_csv(url(urlfile))  # 
 
 modules <- unique(mm_sec_bu$Key4)
+modules <- modules[order(modules)]
 mm_sec <- mm_sec_bu[mm_sec_bu$Key6!="Insert",]
 
 mm_sec$SecDept <- mm_sec$Value %>%
