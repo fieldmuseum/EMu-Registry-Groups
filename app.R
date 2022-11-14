@@ -137,13 +137,13 @@ ui <- fluidPage(
   
   # App title
   titlePanel("Permissions by table"),
-  # tags$p("Charts visualize",
-         # tags$a(href = "https://raw.githubusercontent.com/fieldmuseum/EMu-Documentation/master/Schemas/all_schemas.csv", 
-         #        "all_schemas.csv"), 
-         # " in ",
-         # tags$a(href = "https://github.com/fieldmuseum/EMu-Documentation/tree/master/Schemas",
-         #        "this repo."),
-         # tags$em(" May take a moment to load.")),
+  tags$p("Charts visualize a CSV structured ",
+  tags$a(href = "https://raw.githubusercontent.com/fieldmuseum/EMu-Registry-Groups/master/sample_data_in/table_security/eregistr.csv",
+         "like this.")),
+  tags$p("Code for this app and further info in ",
+  tags$a(href = "https://github.com/fieldmuseum/EMu-Registry-Groups",
+         "this repo.")),
+  tags$em(" May take a moment to load."),
 
 
   # Allow user to select a module to summarize
