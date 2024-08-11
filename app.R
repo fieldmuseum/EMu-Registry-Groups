@@ -135,16 +135,10 @@ ui <- fluidPage(
   title = "EMu Group Permissions",
   
   # App title
-  titlePanel("Permissions by table"),
-  tags$p("In the selected module, when can a user-group read / edit / delete records based on their 'Security Department' and other field-values?"),
-  tags$p("NOTE: This chart does not include query-defaults which may further restrict access."),
+  titlePanel("User-group Permissions"),
+  tags$p("What values affect whether a user-group can view, edit, and/or delete records?"),
+  tags$p(tags$strong("Last Mod: 2024-Aug-9"), " -- NOTE: This chart does not currently include query-defaults which may further restrict access."),
   tags$br(),
-  tags$p("Input-data is a CSV structured ",
-  tags$a(href = "https://raw.githubusercontent.com/fieldmuseum/EMu-Registry-Groups/master/sample_data_in/table_security/eregistr.csv",
-         "like this.")),
-  tags$p("Code for this app and further info in ",
-  tags$a(href = "https://github.com/fieldmuseum/EMu-Registry-Groups",
-         "this repo.")),
   tags$em(" May take a moment to load."),
 
 
@@ -159,9 +153,9 @@ ui <- fluidPage(
       
       tags$br(),
       tags$p(tags$strong("In the main chart:")),
-      tags$p("- ", tags$strong("Each column"), " = a permission-setting value in an EMu field"),
-      tags$p("- ", tags$strong("Each row"), " = an EMu user group"),
-      tags$p("- Color represents permission levels: "),
+      tags$p(tags$strong("Each row"), " = an EMu user-group"),
+      tags$p(tags$strong("Each column"), " = a value in an EMu field that can affect a group's permission"),
+      tags$p(tags$strong("Color"), " represents permission levels:"),
       tags$ul(
         tags$li(tags$strong("3"), " (pink) = Full Delete, Edit & View", style = "color:#9E0076"), #  "color:#c4569f"),
         tags$li(tags$strong("2"), " (orange) = Edit & View", style = "color:#AD5F00"),  # "color:#ca9c33"),
@@ -169,6 +163,15 @@ ui <- fluidPage(
         tags$li(tags$strong("0"), " (gray) = no setting", style = "color:#707070")
       ),
 
+      tags$br(),
+      
+      tags$line(),
+      tags$p("Input-data is a CSV structured ",
+             tags$a(href = "https://raw.githubusercontent.com/fieldmuseum/EMu-Registry-Groups/master/sample_data_in/table_security/eregistr.csv",
+                    "like this.")),
+      tags$p("Code for this app and further info in ",
+             tags$a(href = "https://github.com/fieldmuseum/EMu-Registry-Groups",
+                    "this repo.")),
       tags$br(),
 
       width = 3
@@ -178,13 +181,13 @@ ui <- fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       
-      h3("User-group permissions", textOutput("modulePick")),
+      h3("User-group permissions for", textOutput("modulePick")),
       tags$p("(If no chart displays, no group permissions are set.)"),
       plotlyOutput("heatPlot", height = "800px"),
       
       tags$br(),
 
-      h4("Other permission settings:"),
+      h4("Other fields/values that may affect permission settings:"),
       tags$p("(If no chart displays, no other permissions are set.)"),
       plotlyOutput("heatPlot2", height = "600px"),
       
@@ -247,7 +250,7 @@ server <- function(input, output) {
   })
 
   output$modulePick <- renderText({
-    paste(input$ModuleChosen, "fields")
+    paste(input$ModuleChosen, "SecDepartment values")
   })
   
 }
