@@ -13,7 +13,7 @@ library(plotly)
 
 
 # # Input Registry CSV
-# # This should be an EMu eregistry report of 
+# # This should be an EMu eregistry report including 
 # #   Key1 through Key10 and the Value columns
 # #   for all records where Key5 == 'Security' and Key1 == 'Group'
 # urlfile="https://raw.githubusercontent.com/fieldmuseum/EMu-Registry-Groups/master/sample_data_in/table_security/eregistr.csv"
@@ -28,8 +28,7 @@ if (Sys.getenv("LIVE_OR_TEST")=="LIVE") {
 
 mm_sec_bu <- read_csv(file=paste0(input_filepath,"eregistr.csv"))  # read_csv(url(urlfile))  # 
 
-modules <- unique(mm_sec_bu$Key4)
-modules <- modules[order(modules)]
+modules <- unique(mm_sec_bu$Key4[order(mm_sec_bu$Key4)])
 mm_sec <- mm_sec_bu[mm_sec_bu$Key6!="Insert",]
 
 mm_sec$SecDept <- mm_sec$Value %>%
@@ -137,7 +136,9 @@ ui <- fluidPage(
   
   # App title
   titlePanel("Permissions by table"),
-  tags$p("Charts visualize a CSV structured ",
+  tags$p("In the selected module, when can a group read / edit / delete a record based on its 'Security Department' and other field-values?"),
+  tags$br(),
+  tags$p("Input-data is a CSV structured ",
   tags$a(href = "https://raw.githubusercontent.com/fieldmuseum/EMu-Registry-Groups/master/sample_data_in/table_security/eregistr.csv",
          "like this.")),
   tags$p("Code for this app and further info in ",
@@ -153,16 +154,20 @@ ui <- fluidPage(
       selectInput("ModuleChosen",
                   label = "Choose a Module:",
                   choices = modules,
-                  selected = "emultimedia"),
+                  selected = "ecatalogue"),
       
       tags$br(),
-      h5("In the main chart:"),
+      tags$p(tags$strong("In the main chart:")),
       tags$p("- ", tags$strong("Each column"), " = a permission-setting value in an EMu field"),
       tags$p("- ", tags$strong("Each row"), " = an EMu user group"),
-      tags$p("- ", tags$strong("0"), " (gray) = no setting"),
-      tags$p("- ", tags$strong("1"), " (green) = View-permission"),
-      tags$p("- ", tags$strong("2"), " (blue) = Edit-permission"),
-      tags$p("- ", tags$strong("3"), " (pink) = Delete-permission"),
+      tags$p("- Color represents permission levels: "),
+      tags$ul(
+        tags$li(tags$strong("3"), " (pink) = Full Delete, Edit & View", style = "color:#9E0076"), #  "color:#c4569f"),
+        tags$li(tags$strong("2"), " (orange) = Edit & View", style = "color:#AD5F00"),  # "color:#ca9c33"),
+        tags$li(tags$strong("1"), " (green) = View only", style = "color:#208320"), # "color:#64ab47"),
+        tags$li(tags$strong("0"), " (gray) = no setting", style = "color:#707070")
+      ),
+
       tags$br(),
 
       width = 3
@@ -207,7 +212,7 @@ server <- function(input, output) {
     heatmaply(mm_sec6[grepl(input$ModuleChosen, rownames(mm_sec6)) > 0,],
               labRow = gsub(paste0(input$ModuleChosen, "_"), "",
                             rownames(mm_sec6)[grepl(input$ModuleChosen, rownames(mm_sec6)) > 0]),
-              colors = c("#f7f7f7", "#9fc456", "#569fc4", "#c4569f"),
+              colors = c("#f7f7f7", "#bfe480", "#f4b850", "#c4569f"),
               k_row = 1, k_col = 1,
               dendrogram = c("none"),
               show_dendrogram = c(FALSE, FALSE),
@@ -227,7 +232,7 @@ server <- function(input, output) {
     heatmaply(mm_not_sec6[grepl(input$ModuleChosen, rownames(mm_not_sec6)) > 0,],
               labRow = gsub(paste0(input$ModuleChosen, "_"), "",
                             rownames(mm_not_sec6)[grepl(input$ModuleChosen, rownames(mm_not_sec6)) > 0]),
-              colors = c("#f7f7f7", "#9fc456", "#569fc4", "#c4569f"),
+              colors = c("#f7f7f7", "#bfe480", "#f4b850", "#c4569f"),
               k_row = 1, k_col = 1,
               dendrogram = c("none"),
               show_dendrogram = c(FALSE, FALSE),
