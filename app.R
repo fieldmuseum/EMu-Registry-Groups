@@ -136,7 +136,8 @@ ui <- fluidPage(
   
   # App title
   titlePanel("Permissions by table"),
-  tags$p("In the selected module, when can a group read / edit / delete a record based on its 'Security Department' and other field-values?"),
+  tags$p("In the selected module, when can a user-group read / edit / delete records based on their 'Security Department' and other field-values?"),
+  tags$p("NOTE: This chart does not include query-defaults which may further restrict access."),
   tags$br(),
   tags$p("Input-data is a CSV structured ",
   tags$a(href = "https://raw.githubusercontent.com/fieldmuseum/EMu-Registry-Groups/master/sample_data_in/table_security/eregistr.csv",
@@ -177,7 +178,7 @@ ui <- fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       
-      h3("Group permissions", textOutput("modulePick")),
+      h3("User-group permissions", textOutput("modulePick")),
       tags$p("(If no chart displays, no group permissions are set.)"),
       plotlyOutput("heatPlot", height = "800px"),
       
