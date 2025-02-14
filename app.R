@@ -137,7 +137,7 @@ ui <- fluidPage(
   # App title
   titlePanel("User-group Permissions"),
   tags$p("What values affect whether a user-group can view, edit, and/or delete records?"),
-  tags$p(tags$strong("Last Mod: 2024-Aug-9"), " -- NOTE: This chart does not currently include query-defaults which may further restrict access."),
+  tags$p(tags$strong("Last Mod: 2025-Feb-14"), " -- NOTE: This chart does not currently include query-defaults which may further restrict access."),
   tags$br(),
   tags$em(" May take a moment to load."),
 
